@@ -1,10 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm, LoginForm, TicketForm
 from models import db, User, Ticket
-from werkzeug.security import generate_password_hash, check_password_hash
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -17,10 +16,6 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 @app.route('/')
 @login_required
@@ -40,7 +35,6 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -51,7 +45,6 @@ def login():
             return redirect(url_for('index'))
         flash('Invalid credentials', 'danger')
     return render_template('login.html', form=form)
-
 
 @app.route('/logout')
 @login_required
@@ -91,4 +84,6 @@ def delete_ticket(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
