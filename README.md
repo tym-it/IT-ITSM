@@ -1,13 +1,12 @@
 
 # Create README.md
 
-readme_md_content = """# ITSM App
 This is a basic ITSM (Information Technology Service Management) web application built using Flask for TYM-IT. 
 Design and develop by MR.AKE PRAYOONPROM
 
 It allows users to create, view, update, and delete support tickets.
 
-## Features
+## Main features
 
 - Create new IT support tickets
 - View all submitted tickets
